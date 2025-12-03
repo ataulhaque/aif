@@ -1,0 +1,13 @@
+httpx
+pydantic
+requests
+uvicorn
+fastapi
+langgraph
+langchain_openai
+yfinance
+pandas
+numpy
+ta-lib
+pandas-ta
+plotly
