@@ -194,9 +194,8 @@ async def get_technical_analysis_endpoint(symbol: str, period: str = "3mo"):
         
         if historical_data is None or historical_data.empty:
             raise HTTPException(status_code=404, detail=f"Historical data not found for {symbol}")
-        
-        # Calculate indicators
-        indicators = calculate_technical_indicators(historical_data)
+          # Calculate indicators
+        indicators = calculate_technical_indicators(historical_data, symbol)
         if not indicators:
             raise HTTPException(status_code=500, detail="Failed to calculate technical indicators")
         
@@ -236,9 +235,9 @@ async def health_check():
             "Trading signals and recommendations", 
             "Intelligent query routing",
             "Multi-threaded conversations"
-        ],
-        "supported_indicators": ["RSI", "MACD", "SMA", "EMA", "Bollinger Bands", "Volume Analysis"],
-        "supported_stock_exchanges": ["NSE (National Stock Exchange of India)"],
+        ],        "supported_indicators": ["RSI", "MACD", "SMA", "EMA", "Bollinger Bands", "Volume Analysis"],
+        "supported_stock_exchanges": ["Alpha Vantage (US Markets)", "NSE (Demo Data)"],
+        "data_sources": ["Alpha Vantage API", "Demo Data for NSE stocks"],
         "modules": [
             "config.py - Configuration and constants",
             "models.py - Data models and schemas",

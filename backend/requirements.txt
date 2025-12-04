@@ -5,7 +5,6 @@ uvicorn
 fastapi
 langgraph
 langchain_openai
-yfinance
 pandas
 numpy
 ta-lib

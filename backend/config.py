@@ -11,6 +11,10 @@ GENAILAB_API_KEY = SecretStr(os.getenv("GENAILAB_API_KEY") or "sk--17WECoVy-pTpI
 GENAILAB_BASE_URL = "https://genailab.tcs.in"
 GENAILAB_MODEL = "azure/genailab-maas-gpt-35-turbo"
 
+# Alpha Vantage Configuration
+ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY") or "demo"  # Get your free API key from https://www.alphavantage.co/
+ALPHA_VANTAGE_BASE_URL = "https://www.alphavantage.co/query"
+
 # NSE Stock Price Configuration
 NSE_BASE_URL = "https://www.nseindia.com"
 NSE_QUOTE_URL = f"{NSE_BASE_URL}/api/quote-equity"

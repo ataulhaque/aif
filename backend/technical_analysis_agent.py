@@ -49,9 +49,8 @@ def technical_analysis_agent_node(state: ChatState) -> ChatState:
         )
         state["messages"].append(error_response)
         return state
-    
-    # Calculate technical indicators
-    indicators = calculate_technical_indicators(historical_data)
+      # Calculate technical indicators
+    indicators = calculate_technical_indicators(historical_data, symbol)
     
     if not indicators:
         error_response = AIMessage(
@@ -62,12 +61,18 @@ def technical_analysis_agent_node(state: ChatState) -> ChatState:
     
     # Generate trading signals
     signals = generate_trading_signals(indicators, symbol)
-    
-    # Format the response
+      # Format the response
     current_price = indicators['current_price']
     previous_close = indicators['previous_close']
     price_change = current_price - previous_close
     price_change_pct = (price_change / previous_close) * 100
+    
+    # Safely format indicators with proper null checks
+    def safe_format(value, decimals=2):
+        return f"{value:.{decimals}f}" if value is not None else "N/A"
+    
+    def safe_format_currency(value, decimals=2):
+        return f"₹{value:.{decimals}f}" if value is not None else "N/A"
     
     # Create comprehensive technical analysis report
     response_text = f"""📊 **Technical Analysis Report for {symbol}**
@@ -76,19 +81,19 @@ def technical_analysis_agent_node(state: ChatState) -> ChatState:
 📈 **Overall Signal**: {signals['overall_signal']} ({signals['confidence']} confidence)
 
 🔍 **Technical Indicators**:
-• RSI (14): {indicators.get('rsi', 'N/A'):.2f if indicators.get('rsi') else 'N/A'}
-• MACD: {indicators.get('macd', 'N/A'):.4f if indicators.get('macd') else 'N/A'}
-• Signal Line: {indicators.get('macd_signal', 'N/A'):.4f if indicators.get('macd_signal') else 'N/A'}
+• RSI (14): {safe_format(indicators.get('rsi'))}
+• MACD: {safe_format(indicators.get('macd'), 4)}
+• Signal Line: {safe_format(indicators.get('macd_signal'), 4)}
 
 📊 **Moving Averages**:
-• SMA 20: ₹{indicators.get('sma_20', 'N/A'):.2f if indicators.get('sma_20') else 'N/A'}
-• SMA 50: ₹{indicators.get('sma_50', 'N/A'):.2f if indicators.get('sma_50') else 'N/A'}
-• EMA 12: ₹{indicators.get('ema_12', 'N/A'):.2f if indicators.get('ema_12') else 'N/A'}
+• SMA 20: {safe_format_currency(indicators.get('sma_20'))}
+• SMA 50: {safe_format_currency(indicators.get('sma_50'))}
+• EMA 12: {safe_format_currency(indicators.get('ema_12'))}
 
 🎯 **Bollinger Bands**:
-• Upper: ₹{indicators.get('bb_upper', 'N/A'):.2f if indicators.get('bb_upper') else 'N/A'}
-• Middle: ₹{indicators.get('bb_middle', 'N/A'):.2f if indicators.get('bb_middle') else 'N/A'}
-• Lower: ₹{indicators.get('bb_lower', 'N/A'):.2f if indicators.get('bb_lower') else 'N/A'}
+• Upper: {safe_format_currency(indicators.get('bb_upper'))}
+• Middle: {safe_format_currency(indicators.get('bb_middle'))}
+• Lower: {safe_format_currency(indicators.get('bb_lower'))}
 
 📈 **Key Signals**:
 {chr(10).join(f"• {signal}" for signal in signals['signals']) if signals['signals'] else "• No clear signals at this time"}
